@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vanilla HTML Web Scraper with Alternative Proxy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    #output {
+      width: 100%;
+      height: 300px;
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vanilla HTML Web Scraper</h1>
+  <input type="text" id="urlInput" placeholder="Enter webpage URL">
+  <button onclick="scrape()">Scrape</button>
+  <div id="output" placeholder="Scraped text will appear here..."></div>
+  
+  <script>
+    function scrape() {
+      const url = document.getElementById('urlInput').value;
+      if (!url) {
+        alert('Please enter a URL.');
+        return;
+      }
+      // Use ThingProxy as an alternative to bypass CORS restrictions.
+      const proxyUrl = "https://thingproxy.freeboard.io/fetch/" + url;
+      
+      fetch(proxyUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.text();
+        })
+        .then(html => {
+          // Parse the fetched HTML
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const text = doc.body.textContent.replace(/\s+/g, ' ').trim() || "No text found.";
+          document.getElementById('output').innerText = text;
+        })
+        .catch(error => {
+          document.getElementById('output').innerText = 'Error: ' + error;
+        });
+    }
+  </script>
+</body>
+</html>
