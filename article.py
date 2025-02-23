@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
-# This HTML template mimics the design from your uploaded file.
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +54,6 @@ HTML_TEMPLATE = '''
 '''
 
 def scrape_article(url):
-    # Use a browser-like user-agent header to help bypass basic bot protections.
     headers = {
         'User-Agent': (
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -66,18 +64,16 @@ def scrape_article(url):
     
     try:
         response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raises an error for bad status codes
+        response.raise_for_status() 
     except Exception as e:
         return f"Error retrieving URL: {e}"
     
     soup = BeautifulSoup(response.content, 'html.parser')
     
-    # First try to extract content from an <article> tag
     article_tag = soup.find('article')
     if article_tag:
         article_text = article_tag.get_text(separator='\n', strip=True)
     else:
-        # Fallback: Combine text from all <p> tags
         paragraphs = soup.find_all('p')
         article_text = "\n".join(p.get_text(strip=True) for p in paragraphs)
     
@@ -92,11 +88,8 @@ def scrape():
     url = request.form.get('url')
     scraped_text = scrape_article(url)
     
-    # Print the scraped text to the terminal
     print("\n--- Scraped Article Text ---\n")
     print(scraped_text)
-    
-    # Save the scraped text to a file
     with open("scraped_article.txt", "w", encoding="utf-8") as f:
         f.write(scraped_text)
     
