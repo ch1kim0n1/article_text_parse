@@ -1,5 +1,6 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 import re
+import os
 
 def extract_video_id(url):
     pattern = r"(?:v=|\/)([0-9A-Za-z_-]{11}).*"
@@ -25,8 +26,15 @@ def main():
     video_url = input("Please paste the YouTube video URL: ")
     transcript = get_transcript_from_url(video_url)
     if transcript:
+        full_text = ""
         for segment in transcript:
-            print(segment['text'])
+            segment_text = segment.get('text', '')
+            print(segment_text)
+            full_text += segment_text + "\n"
+        file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "transcript.txt")
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(full_text)
+        print(f"Transcript saved to {file_path}")
     else:
         print("No transcript available.")
 

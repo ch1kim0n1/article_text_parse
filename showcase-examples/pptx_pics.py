@@ -3,13 +3,10 @@ import zipfile
 import tkinter as tk
 from tkinter import filedialog, scrolledtext, messagebox
 
-# For PDF extraction, install PyMuPDF: pip install pymupdf
 try:
-    import fitz  # PyMuPDF
+    import fitz  
 except ImportError:
     fitz = None
-
-# ---------- Extraction Functions ----------
 
 def extract_images_from_zip(file_path, media_folder, output_folder, log):
     """
@@ -100,7 +97,6 @@ class ImageExtractorApp:
 
         self.selected_file = None
 
-        # File selection frame
         self.file_frame = tk.Frame(master)
         self.file_frame.pack(pady=10)
 
@@ -110,11 +106,9 @@ class ImageExtractorApp:
         self.file_label = tk.Label(self.file_frame, text="No file selected", width=50, anchor="w")
         self.file_label.pack(side=tk.LEFT, padx=5)
 
-        # Extraction button
         self.extract_button = tk.Button(master, text="Extract Images", command=self.start_extraction)
         self.extract_button.pack(pady=5)
 
-        # Log output (scrolled text widget)
         self.log_box = scrolledtext.ScrolledText(master, width=80, height=20, state="disabled")
         self.log_box.pack(pady=10)
 
